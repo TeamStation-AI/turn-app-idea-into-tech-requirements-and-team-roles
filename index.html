@@ -10,22 +10,23 @@
     <style>
         body {
             font-family: 'Poppins', sans-serif;
-            background-color: #0c1020; /* TeamStation background color */
+            background-color: #0c1020;
             color: white;
             margin: 0;
             padding: 0;
+            line-height: 1.6;
         }
 
         .container {
             max-width: 800px;
             margin: 40px auto;
             padding: 30px;
-            background-color: #0c1020; /* TeamStation background color */
+            background-color: #0c1020;
             border-radius: 8px;
         }
 
         h1, h2 {
-            text-align: left; /* Align headings to the left */
+            text-align: left;
             color: white;
         }
 
@@ -44,6 +45,7 @@
             margin-bottom: 8px;
             font-weight: 500;
             color: white;
+            font-weight: bold;
         }
 
         input, textarea {
@@ -52,7 +54,7 @@
             margin-bottom: 15px;
             border: 1px solid rgba(255, 255, 255, 0.2);
             border-radius: 6px;
-            background-color: #0c1020; /* Ensure inputs have the same background */
+            background-color: #0c1020;
             color: white;
             font-size: 1rem;
             box-sizing: border-box;
@@ -87,6 +89,59 @@
         li {
             margin-bottom: 8px;
             line-height: 1.4;
+             cursor: pointer; /* Change cursor to a pointer */
+        }
+
+         /* Generic Tech List Styles */
+        .tech-list {
+            margin-top: 20px;
+            padding: 20px;
+            border: 1px solid rgba(255, 255, 255, 0.1);
+            border-radius: 8px;
+        }
+
+        .tech-list ul {
+            list-style-type: none;
+            padding-left: 0;
+            display: flex;
+            flex-wrap: wrap;
+            gap: 10px; /* Add some spacing between items */
+        }
+
+        .tech-list li {
+            background-color: rgba(255, 255, 255, 0.05); /* Subtle background */
+            padding: 8px 12px;
+            border-radius: 6px;
+            font-size: 0.9rem;
+             cursor: pointer; /* Change cursor to a pointer */
+        }
+
+        /* Tooltip Styles */
+        .tooltip {
+            position: relative;
+            display: inline-block;
+        }
+
+        .tooltip .tooltiptext {
+            visibility: hidden;
+            width: 250px; /* Adjust width */
+            background-color: #555;
+            color: #fff;
+            text-align: center;
+            border-radius: 6px;
+            padding: 5px;
+            position: absolute;
+            z-index: 1;
+            bottom: 125%;
+            left: 50%;
+            margin-left: -125px; /* Half of the width */
+            opacity: 0;
+            transition: opacity 0.3s;
+        }
+
+        .tooltip:hover .tooltiptext {
+            visibility: visible;
+            opacity: 1;
         }
     </style>
 </head>
@@ -98,95 +153,85 @@
         <button onclick="generateSuggestions()">Generate Suggestions</button>
 
         <div id="results">
-            <h2>Suggested Technologies, Databases, and Libraries:</h2>
+            <h2>Suggested Technologies, Databases, and Libraries Based on Your Idea:</h2>
             <ul id="techList"></ul>
 
-            <h2>Suggested Talent Roles and Seniority:</h2>
+            <h2>Suggested Talent Roles and Seniority Based on Your Idea:</h2>
             <ul id="talentRoles"></ul>
+        </div>
+
+        <div class="tech-list">
+            <h2>Commonly Used Technologies, Databases, and Libraries:</h2>
+            <ul id="genericTechList">
+
+            </ul>
         </div>
     </div>
 
     <script>
-        const techMappings = {
-            "e-commerce": {
-                tech: ["React", "Node.js", "MongoDB", "Express.js", "Redux", "Stripe API", "AWS S3"],
-                roles: [
-                    "Frontend Developer (Mid-Level)",
-                    "Backend Developer (Senior)",
-                    "DBA (Mid-Level)",
-                    "DevOps Engineer (Proficient)"
-                ]
-            },
-            "social media": {
-                tech: ["React Native", "Node.js", "PostgreSQL", "GraphQL", "Socket.IO", "Redis", "Cloudinary API"],
-                roles: [
-                    "Mobile Developer (Senior)",
-                    "Backend Developer (Senior)",
-                    "DevOps Engineer (Senior)",
-                    "QA Automation Engineer (Mid-Level)"
-                ]
-            },
-            "data analysis": {
-                tech: ["Python", "Pandas", "SQL", "Tableau", "Spark", "Scikit-learn", "Jupyter Notebook"],
-                roles: [
-                    "Data Scientist (Senior)",
-                    "Data Engineer (Senior)",
-                    "Business Intelligence Analyst (Mid-Level)"
-                ]
-            },
-            "AI": {
-                tech: ["Python", "TensorFlow", "PyTorch", "Cloud Services (AWS, Azure, GCP)", "Keras", "OpenCV"],
-                roles: [
-                    "ML Engineer (Senior)",
-                    "AI Specialist (Expert)",
-                    "Data Engineer (Senior)",
-                    "DevOps Engineer (Senior)"
-                ]
-            },
-            "web application":{
-                 tech: ["Javascript", "HTML", "CSS", "React", "Angular","Vue.js", ],
-                roles: [
-                    "Frontend Developer (Mid-Level)",
-                    "Backend Developer (Senior)",
-                    "QA Automation Engineer (Mid-Level)"
-                ]
-            },
-              "database application":{
-                 tech: ["SQL", "PostGres", "No-SQL", "Data Engineer", "Data Scienctist"],
-                roles: [
-                    "Data Engineer (Mid-Level)",
-                    "DBA (Senior)",
-                    "Data Scientist (Mid-Level)"
-                ]
-            },
-            "cross platform mobile application":{
-                tech: ["React native", "Flutter"],
-                 roles: [
-                    "Mobile Developer (Mid-Level)",
-                    "backend engineer (Senior)",
-                    "UX Designer(Mid-Level)"
-                ]
-            },
-            "eCommerce Certified Specialist":{
-                 tech: ["Shopify", "Big Commerce", "Salesforce Commerce Cloud", "Magento"],
-                 roles: [
-                    "Data engineer(Senior)",
-                    "AI Analyst (Mid-Level)",
-                    "backend engineer (Senior)"
-                ]
-            },
-                "utility technology partner":{
-                 tech: ["AI Cloud", "Automation Cloud", "Machine Learning Cloud"],
-                roles: [
-                    "Data engineer (Mid-Level)",
-                    "AI Analyst (Mid-Level)",
-                    "backend engineer (Senior)"
-                ]
-            }
-
+           const techMeanings = {
+            "JavaScript": "A versatile scripting language used for front-end and back-end development.",
+            "HTML": "The standard markup language for creating web pages.",
+            "CSS": "Used to style HTML elements for visual presentation.",
+            "React": "A JavaScript library for building user interfaces.",
+            "Angular": "A comprehensive framework for building client-side applications.",
+            "Vue.js": "A progressive JavaScript framework for building user interfaces.",
+            "Node.js": "A JavaScript runtime built on Chrome's V8 JavaScript engine.",
+            "Express.js": "A fast, unopinionated, minimalist web framework for Node.js.",
+            "Python": "A high-level, general-purpose programming language.",
+            "Java": "A widely used object-oriented programming language.",
+            "C#": "A modern, object-oriented programming language from Microsoft.",
+            ".NET": "A software framework developed by Microsoft.",
+            "SQL": "A standard language for accessing and manipulating databases.",
+            "PostgreSQL": "An advanced open-source relational database management system.",
+            "MongoDB": "A cross-platform document-oriented database program.",
+            "MySQL": "An open-source relational database management system.",
+            "NoSQL": "A class of database management systems that do not use SQL.",
+            "AWS": "Amazon Web Services, a suite of cloud computing services.",
+            "Azure": "Microsoft Azure, a cloud computing service.",
+            "GCP": "Google Cloud Platform, a suite of cloud computing services.",
+            "Docker": "A platform for developing, shipping, and running applications in containers.",
+            "Kubernetes": "An open-source container orchestration system.",
+            "Jenkins": "An open-source automation server.",
+            "Git": "A distributed version control system.",
+            "GitHub": "A web-based platform for version control using Git.",
+            "GitLab": "A web-based DevOps lifecycle tool based on Git.",
+            "RESTful APIs": "An architectural style for designing networked applications.",
+            "GraphQL": "A query language for your API.",
+            "OAuth": "An open standard for access delegation.",
+            "JSON": "A lightweight data-interchange format.",
+            "XML": "A markup language that defines a set of rules for encoding documents.",
+            "AI Cloud": "Cloud-based services for artificial intelligence applications.",
+            "Automation Cloud": "Cloud-based services for automation tasks.",
+            "Machine Learning Cloud": "Cloud-based services for machine learning applications.",
+            "CI/CD": "Continuous Integration/Continuous Deployment, practices for automating software delivery.",
+            "React Native": "A framework for building native mobile apps with React.",
+            "Flutter": "Google’s UI toolkit for building natively compiled applications for mobile, web, and desktop from a single codebase.",
+            "TensorFlow": "An open-source machine learning framework.",
+            "PyTorch": "An open-source machine learning framework.",
+            "Keras": "A high-level neural networks API, written in Python and capable of running on top of TensorFlow, CNTK, or Theano.",
+            "OpenCV": "Open Source Computer Vision Library.",
+            "Pandas": "A software library written for the Python programming language for data manipulation and analysis.",
+            "Spark": "An open-source, distributed computing system.",
+            "Scikit-learn": "A free software machine learning library for the Python programming language.",
+            "Jupyter Notebook": "A web-based interactive computational environment for creating notebook documents.",
+            "Tableau": "A visual analytics platform.",
+            "Shopify": "A subscription e-commerce platform.",
+            "Big Commerce": "A SaaS e-commerce platform.",
+            "Salesforce Commerce Cloud": "A cloud-based e-commerce platform.",
+            "Magento": "An open-source e-commerce platform.",
+            "Stripe API": "A payment processing platform.",
+            "AWS S3": "Amazon Simple Storage Service.",
+            "Socket.IO": "A library that enables real-time, bidirectional and event-based communication.",
+            "Redis": "An in-memory data structure store, used as a database, cache, and message broker.",
+            "Cloudinary API": "A cloud-based media management platform.",
+            "Mobile Developer" : "Develop Mobile Application",
+              "Backend Developer" : "Develop backend Application",
+                "Data Engineer": "Develop Data Applications",
+                "AI Specialis" : "Artificial Intelligence"
         };
 
-         const allTechnologies = [
+            const allTechnologies = [
                 "JavaScript", "HTML", "CSS", "React", "Angular", "Vue.js",
                 "Node.js", "Express.js", "Python", "Java", "C#", ".NET",
                 "SQL", "PostgreSQL", "MongoDB", "MySQL", "NoSQL",
@@ -240,13 +285,12 @@
                 "Utility Technology Partner",
                    "AI Analyst (Mid-Level)",
                   "UX Designer(Mid-Level)",
-                   "backend engineer (Senior)",
-                     "mobile Developer (Mid-Level)"
+                   "Backend Engineer (Senior)",
+                     "Mobile Developer (Mid-Level)"
             ];
 
-
         function generateSuggestions() {
-            const idea = document.getElementById("idea").value.toLowerCase();
+            const idea = document.getElementById("idea").value;
             const suggestedTech = new Set();
             const suggestedRoles = new Set();
 
@@ -268,8 +312,19 @@
             talentRolesList.innerHTML = "";
 
             techStack.forEach(tech => {
-                const li = document.createElement("li");
-                li.innerText = tech;
+                 const li = document.createElement("li");
+                li.className = "tooltip"; // Apply the tooltip class
+
+                const techText = document.createTextNode(tech);
+                li.appendChild(techText);
+
+                 // Create the tooltip span
+                const tooltipSpan = document.createElement("span");
+                tooltipSpan.className = "tooltiptext";
+                tooltipSpan.innerText = techMeanings[tech] || "No description available."; // Retrieve the meaning and apply the styling
+                li.appendChild(tooltipSpan);
+
+
                 techList.appendChild(li);
             });
 
@@ -280,9 +335,12 @@
             });
 
             if (techStack.length === 0 && talentRoles.length === 0) {
-                techList.innerHTML = "<li>No specific suggestions found. Please provide more details.</li>";
-                talentRolesList.innerHTML = "<li>No specific suggestions found. Please provide more details.</li>";
+                techList.innerHTML = "<li>No specific suggestions found based on keywords. See below for common technologies.</li>";
+                talentRolesList.innerHTML = "<li>No specific suggestions found based on keywords.</li>";
             }
+
+                attachMeanings(); // Call function to attach meanings to generic list
+
         }
     </script>
 </body>
