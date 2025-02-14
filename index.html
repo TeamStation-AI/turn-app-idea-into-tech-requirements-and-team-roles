@@ -1,0 +1,289 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>TeamStation Application Idea Generator</title>
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Poppins:wght@400;500;600;700&display=swap" rel="stylesheet">
+    <style>
+        body {
+            font-family: 'Poppins', sans-serif;
+            background-color: #0c1020; /* TeamStation background color */
+            color: white;
+            margin: 0;
+            padding: 0;
+        }
+
+        .container {
+            max-width: 800px;
+            margin: 40px auto;
+            padding: 30px;
+            background-color: #0c1020; /* TeamStation background color */
+            border-radius: 8px;
+        }
+
+        h1, h2 {
+            text-align: left; /* Align headings to the left */
+            color: white;
+        }
+
+        h1 {
+            font-size: 2.5rem;
+            margin-bottom: 20px;
+        }
+
+        h2 {
+            font-size: 1.75rem;
+            margin-bottom: 15px;
+        }
+
+        label {
+            display: block;
+            margin-bottom: 8px;
+            font-weight: 500;
+            color: white;
+        }
+
+        input, textarea {
+            width: 100%;
+            padding: 12px 15px;
+            margin-bottom: 15px;
+            border: 1px solid rgba(255, 255, 255, 0.2);
+            border-radius: 6px;
+            background-color: #0c1020; /* Ensure inputs have the same background */
+            color: white;
+            font-size: 1rem;
+            box-sizing: border-box;
+        }
+
+        button {
+            background-color: #007BFF;
+            color: white;
+            padding: 14px 20px;
+            border: none;
+            border-radius: 8px;
+            cursor: pointer;
+            transition: background-color 0.3s ease;
+            font-size: 1.1rem;
+            font-weight: 500;
+        }
+
+        button:hover {
+            background-color: #0056b3;
+        }
+
+        #results {
+            margin-top: 30px;
+        }
+
+        ul {
+            list-style-type: disc;
+            padding-left: 25px;
+            margin-bottom: 20px;
+        }
+
+        li {
+            margin-bottom: 8px;
+            line-height: 1.4;
+        }
+    </style>
+</head>
+<body>
+    <div class="container">
+        <h1>Application Idea Generator</h1>
+        <label for="idea">Enter your Application Idea:</label>
+        <textarea id="idea" rows="4"></textarea>
+        <button onclick="generateSuggestions()">Generate Suggestions</button>
+
+        <div id="results">
+            <h2>Suggested Technologies, Databases, and Libraries:</h2>
+            <ul id="techList"></ul>
+
+            <h2>Suggested Talent Roles and Seniority:</h2>
+            <ul id="talentRoles"></ul>
+        </div>
+    </div>
+
+    <script>
+        const techMappings = {
+            "e-commerce": {
+                tech: ["React", "Node.js", "MongoDB", "Express.js", "Redux", "Stripe API", "AWS S3"],
+                roles: [
+                    "Frontend Developer (Mid-Level)",
+                    "Backend Developer (Senior)",
+                    "DBA (Mid-Level)",
+                    "DevOps Engineer (Proficient)"
+                ]
+            },
+            "social media": {
+                tech: ["React Native", "Node.js", "PostgreSQL", "GraphQL", "Socket.IO", "Redis", "Cloudinary API"],
+                roles: [
+                    "Mobile Developer (Senior)",
+                    "Backend Developer (Senior)",
+                    "DevOps Engineer (Senior)",
+                    "QA Automation Engineer (Mid-Level)"
+                ]
+            },
+            "data analysis": {
+                tech: ["Python", "Pandas", "SQL", "Tableau", "Spark", "Scikit-learn", "Jupyter Notebook"],
+                roles: [
+                    "Data Scientist (Senior)",
+                    "Data Engineer (Senior)",
+                    "Business Intelligence Analyst (Mid-Level)"
+                ]
+            },
+            "AI": {
+                tech: ["Python", "TensorFlow", "PyTorch", "Cloud Services (AWS, Azure, GCP)", "Keras", "OpenCV"],
+                roles: [
+                    "ML Engineer (Senior)",
+                    "AI Specialist (Expert)",
+                    "Data Engineer (Senior)",
+                    "DevOps Engineer (Senior)"
+                ]
+            },
+            "web application":{
+                 tech: ["Javascript", "HTML", "CSS", "React", "Angular","Vue.js", ],
+                roles: [
+                    "Frontend Developer (Mid-Level)",
+                    "Backend Developer (Senior)",
+                    "QA Automation Engineer (Mid-Level)"
+                ]
+            },
+              "database application":{
+                 tech: ["SQL", "PostGres", "No-SQL", "Data Engineer", "Data Scienctist"],
+                roles: [
+                    "Data Engineer (Mid-Level)",
+                    "DBA (Senior)",
+                    "Data Scientist (Mid-Level)"
+                ]
+            },
+            "cross platform mobile application":{
+                tech: ["React native", "Flutter"],
+                 roles: [
+                    "Mobile Developer (Mid-Level)",
+                    "backend engineer (Senior)",
+                    "UX Designer(Mid-Level)"
+                ]
+            },
+            "eCommerce Certified Specialist":{
+                 tech: ["Shopify", "Big Commerce", "Salesforce Commerce Cloud", "Magento"],
+                 roles: [
+                    "Data engineer(Senior)",
+                    "AI Analyst (Mid-Level)",
+                    "backend engineer (Senior)"
+                ]
+            },
+                "utility technology partner":{
+                 tech: ["AI Cloud", "Automation Cloud", "Machine Learning Cloud"],
+                roles: [
+                    "Data engineer (Mid-Level)",
+                    "AI Analyst (Mid-Level)",
+                    "backend engineer (Senior)"
+                ]
+            }
+
+        };
+
+         const allTechnologies = [
+                "JavaScript", "HTML", "CSS", "React", "Angular", "Vue.js",
+                "Node.js", "Express.js", "Python", "Java", "C#", ".NET",
+                "SQL", "PostgreSQL", "MongoDB", "MySQL", "NoSQL",
+                "AWS", "Azure", "GCP", "Docker", "Kubernetes", "Jenkins",
+                "Git", "GitHub", "GitLab",
+                "RESTful APIs", "GraphQL", "OAuth", "JSON", "XML",
+                "AI Cloud", "Automation Cloud", "Machine Learning Cloud", "CI/CD",
+                "React Native", "Flutter", "TensorFlow", "PyTorch", "Keras", "OpenCV", "Pandas","Spark", "Scikit-learn", "Jupyter Notebook","Tableau",
+                 "Shopify", "Big Commerce", "Salesforce Commerce Cloud", "Magento","Stripe API", "AWS S3", "Socket.IO", "Redis","Cloudinary API"
+            ];
+
+              const allRoles = [
+                "AI Specialist (Expert)",
+                "Backend Developer (Senior)",
+                "Business Analyst (Mid-Level)",
+                "Business Intelligence Analyst (Mid-Level)",
+                "Cloud Engineer (Senior)",
+                "Cross-Platform Designer",
+                "Data Engineer (Senior)",
+                "Data Engineer (Mid-Level)",
+                "Data Scientist (Senior)",
+                "DBA (Mid-Level)",
+                "DevOps Engineer (Senior)",
+                "DevOps Engineer (Proficient)",
+                "DevSec Engineer (Proficient)",
+                "eCommerce Certified Specialist",
+                "Experience Assurance Engineer",
+                "Frontend Developer (Senior)",
+                "Frontend Developer (Mid-Level)",
+                "Full-Stack Developer (Senior)",
+                "Full-Stack Developer (Mid-Level)",
+                "Machine Learning Engineer (Senior)",
+                "Mobile Architect (Senior)",
+                "Mobile Engineer (Senior)",
+                "Mobile Tester",
+                "Product Designer",
+                "Product Manager",
+                "Product Owner",
+                "QA Automation Engineer (Senior)",
+                "QA Automation Engineer (Mid-Level)",
+                "QA Lead (Senior)",
+                "QA Manual Tester",
+                "Release Manager",
+                "Salesforce Architect",
+                "Scrum Master",
+                "SDET",
+                "Technical Lead (Senior)",
+                "Test Lead",
+                "Usability Test Engineer",
+                "UX Designer (Senior)",
+                "Utility Technology Partner",
+                   "AI Analyst (Mid-Level)",
+                  "UX Designer(Mid-Level)",
+                   "backend engineer (Senior)",
+                     "mobile Developer (Mid-Level)"
+            ];
+
+
+        function generateSuggestions() {
+            const idea = document.getElementById("idea").value.toLowerCase();
+            const suggestedTech = new Set();
+            const suggestedRoles = new Set();
+
+            for (const keyword in techMappings) {
+                if (idea.includes(keyword)) {
+                    techMappings[keyword].tech.forEach(tech => suggestedTech.add(tech));
+                    techMappings[keyword].roles.forEach(role => suggestedRoles.add(role));
+                }
+            }
+
+            displayResults(Array.from(suggestedTech), Array.from(suggestedRoles));
+        }
+
+        function displayResults(techStack, talentRoles) {
+            const techList = document.getElementById("techList");
+            const talentRolesList = document.getElementById("talentRoles");
+
+            techList.innerHTML = "";
+            talentRolesList.innerHTML = "";
+
+            techStack.forEach(tech => {
+                const li = document.createElement("li");
+                li.innerText = tech;
+                techList.appendChild(li);
+            });
+
+            talentRoles.forEach(role => {
+                const li = document.createElement("li");
+                li.innerText = role;
+                talentRolesList.appendChild(li);
+            });
+
+            if (techStack.length === 0 && talentRoles.length === 0) {
+                techList.innerHTML = "<li>No specific suggestions found. Please provide more details.</li>";
+                talentRolesList.innerHTML = "<li>No specific suggestions found. Please provide more details.</li>";
+            }
+        }
+    </script>
+</body>
+</html>
