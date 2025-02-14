@@ -293,18 +293,20 @@
             const idea = document.getElementById("idea").value;
             const suggestedTech = new Set();
             const suggestedRoles = new Set();
+            let foundMatch = false; // Track if any keyword was found
 
             for (const keyword in techMappings) {
                 if (idea.includes(keyword)) {
                     techMappings[keyword].tech.forEach(tech => suggestedTech.add(tech));
                     techMappings[keyword].roles.forEach(role => suggestedRoles.add(role));
+                    foundMatch = true;
                 }
             }
 
-            displayResults(Array.from(suggestedTech), Array.from(suggestedRoles));
+            displayResults(Array.from(suggestedTech), Array.from(suggestedRoles), foundMatch);
         }
 
-        function displayResults(techStack, talentRoles) {
+        function displayResults(techStack, talentRoles, foundMatch) {
             const techList = document.getElementById("techList");
             const talentRolesList = document.getElementById("talentRoles");
 
@@ -312,7 +314,7 @@
             talentRolesList.innerHTML = "";
 
             techStack.forEach(tech => {
-                 const li = document.createElement("li");
+                const li = document.createElement("li");
                 li.className = "tooltip"; // Apply the tooltip class
 
                 const techText = document.createTextNode(tech);
@@ -334,13 +336,10 @@
                 talentRolesList.appendChild(li);
             });
 
-            if (techStack.length === 0 && talentRoles.length === 0) {
-                techList.innerHTML = "<li>No specific suggestions found based on keywords. See below for common technologies.</li>";
-                talentRolesList.innerHTML = "<li>No specific suggestions found based on keywords.</li>";
+           if (!foundMatch) {
+                techList.innerHTML = "<li>No specific suggestions found based on keywords. The following are technologies you might be interested in</li>";
+                talentRolesList.innerHTML = "<li>No specific suggestions found based on keywords.The following are roles you might be interested in</li>";
             }
-
-                attachMeanings(); // Call function to attach meanings to generic list
-
         }
     </script>
 </body>
